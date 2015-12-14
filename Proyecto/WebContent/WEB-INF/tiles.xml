@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- Definimos la plantilla principal de la aplicacion -->
+	
+	<definition name="t_index_con_menu" template="/templates/principalConMenu.jsp" >
+		<put-attribute name="cabecera" value="t_cabecera"/>
+		<put-attribute name="menu" value="/templates/menuExtranet.jsp"/>	
+		<put-attribute name="pie" value="/templates/pie.jsp"/> 
+	</definition>
+	
+	<definition name="t_index_simple" template="/templates/principalSimple.jsp">
+	</definition>
+	
+<!--  pongo	t_cabecera como una definicion para luego pasarlo como value al atributo "cabecera" de t_index_con_menu
+ -->	
+ 	<!-- Ventanita de login  -->
+	<definition name="t_cabecera" template="/templates/cabecera.jsp">
+		<put-attribute name="login" value="/pages/login.jsp" />
+	</definition>
+	
+	<definition name="t_home" extends="t_index_con_menu">
+		<put-attribute name="central" value="/pages/home.jsp"/>
+	</definition>
+	
+	<definition name="t_catalogo" extends="t_index_con_menu">
+		<put-attribute name="central" value="/pages/catalogo.jsp"/>
+	</definition>
+	
+	<definition name="t_clienteRegistro" extends="t_index_con_menu">
+		<put-attribute name="central" value="/pages/clienteRegistro.jsp"/>
+	</definition>
+	
+	<definition name="t_mensajeCuenta" extends="t_index_con_menu">
+		<put-attribute name="central" value="/pages/mensaje.jsp"/>
+	</definition>
+
+	<definition name="t_carrito_compras" extends="t_index_con_menu">
+		<put-attribute name="central" value="/pages/carritoCompras.jsp"/>
+	</definition>
+	
+
+	
+	<!-- intranet -->
+	<definition name="t_index_con_menu_intranet" template="/templates/principalConMenu.jsp" >
+		<put-attribute name="cabecera" value="t_intranet"/>
+		<put-attribute name="menu" value="/templates/menuIntranet.jsp"/>	
+		<put-attribute name="pie" value="/templates/pie.jsp"/> 
+	</definition>
+	
+	<definition name="t_intranet" template="/templates/cabecera.jsp">
+		<put-attribute name="login" value="/pages/intranet.jsp" />
+	</definition>
+ 	<definition name="t_home_intranet" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/home.jsp"/>
+	</definition>
+	<definition name="t_catalogo_intranet" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/catalogo.jsp"/>
+	</definition>
+	<definition name="t_carrito_compras_intranet" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/carritoCompras.jsp"/>
+	</definition>
+	
+	<!-- PRODUCTO********************************************************* -->
+	<definition name="t_mantenimiento_producto" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/productoMantenimiento.jsp"/>	
+	</definition>
+ 	<definition name="t_mantenimiento_producto_grid" extends="t_index_simple">
+		<put-attribute name="central" value="/pages/productoMantenimientoGrid.jsp"/>
+	</definition> 
+	
+	<!-- USUARIO********************************************************* -->
+	<definition name="t_mantenimiento_usuario" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/usuarioMantenimiento.jsp"/>	
+	</definition>	
+ 	<definition name="t_mantenimiento_usuario_grid" extends="t_index_simple">
+		<put-attribute name="central" value="/pages/usuarioMantenimientoGrid.jsp"/>
+	</definition> 
+	
+	<definition name="t_login_registro" extends="t_index_simple">
+		<put-attribute name="central" value="/pages/loginAndRegistroCliente.jsp"/>
+	</definition> 
+		<definition name="t_orden_pedido" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/ordenPedido.jsp"/>
+	</definition>
+	
+	<!-- CLIENTE********************************************************* -->
+	
+	<definition name="t_actualizar_cliente" extends="t_index_con_menu_intranet">
+		<put-attribute name="central" value="/pages/actualizarCliente.jsp"/>	
+	</definition>
+	
+</tiles-definitions>

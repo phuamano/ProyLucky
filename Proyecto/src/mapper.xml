@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="dawi">
+
+	<!-- RESULT MAPS**************************************************** -->
+
+<resultMap id="usuarioMap" type="usuarioBeanIbatis">
+
+         <id property="idUsuario" column="usuario_idCliente" />
+         <result property="nombres" column="usuario_nombres" />
+         <result property="apellidos" column="usuario_apellidos" />
+         <result property="correo" column="usuario_correo" />
+         <result property="cell" column="usuario_cell" />
+         <result property="fechaNacimiento" column="usuario_fechaNacimiento" />
+         <result property="direccion" column="usuario_direccion" />
+         <result property="dni" column="usuario_dni" />
+         <result property="sexo" column="usuario_sexo" />
+         <result property="login" column="usuario_login" />
+         <result property="password" column="usuario_password" />
+          <result property="estado" column="usuario_estado" />
+         <association property="rol"  resultMap="rolMap"/>
+         <association property="distrito"  resultMap="distritoMap"/>
+     </resultMap>
+  	
+  	 <resultMap id="rolMap" type="rolBeanIbatis">
+         <id property="idRol" column="rol_id" />
+         <result property="descripcion" column="rol_descripcion" />
+     </resultMap>
+    
+     <resultMap id="distritoMap" type="distritoBeanIbatis">
+         <id property="idDistrito" column="distrito_id" />
+         <result property="descripcion" column="distrito_descripcion" />
+     </resultMap>
+
+	<!-- LOGIN**************************************************** -->
+	<select id="SQL_traerAccesosDeUsuario" 
+							parameterType="java.lang.String"
+							resultType="accesoBeanIbatis">
+			SELECT DISTINCT
+					r.idAcceso,
+					r.descripcion,
+					r.ruta
+			FROM
+					ACCESO r,
+					ROL_ACCESO p,
+					ROL t,
+					USUARIO u
+			WHERE
+					r.idAcceso = p.idAcceso AND
+					p.idRol = t.idRol AND
+					t.idRol = u.idRol AND	
+					u.idUsuario = #{idUsuario}
+			ORDER BY 2		 					
+		
+	</select>
+	
+	<select id="SQL_login" 	parameterType="usuarioBeanIbatis" 
+						    resultType="usuarioBeanIbatis">
+			SELECT 
+				idUsuario as idUsuario,
+				nombres as nombres,
+				apellidos as apellidos,
+				correo as correo,
+				cell as cell,
+				fechaNacimiento as fechaNacimiento, 
+				direccion as direccion,
+				dni as dni,
+				sexo as sexo,
+				login as login,
+				password as password,
+				estado as estado
+			FROM
+				USUARIO
+			WHERE
+				login = #{login} AND password = #{password} 	
+	</select>
+	
+	<!-- MANTENIMIENTO USUARIO**************************************************** -->
+	
+	<select id="SQL_registraUsuario" parameterType="usuarioBeanIbatis" >
+		INSERT INTO USUARIO VALUES(#{idUsuario},
+				#{nombres},
+				#{apellidos},
+				#{correo},
+				#{cell},
+				null,
+				#{fechaNacimiento},
+				#{direccion},
+				#{dni},
+				#{sexo},
+				#{login},
+				#{password},
+				#{estado},
+				#{idDistrito},
+				#{idRol})
+	</select>	
+	
+	<select id="SQL_listaUsuario"  resultMap="usuarioMap">
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.apellidos as usuario_apellidos,
+				U.correo as usuario_correo,
+				U.cell as usuario_cell,
+				U.fechaNacimiento as usuario_fechaNacimiento,
+				U.direccion as usuario_direccion,
+				U.dni as usuario_dni,
+				U.sexo as usuario_sexo,
+				U.login as usuario_login,
+				U.password as usuario_password,
+				D.idDistrito as distrito_id,
+				D.descripcion as distrito_descripcion,
+				R.idRol as rol_id,
+				R.descripcion as rol_descripcion,
+				U.estado as usuario_estado
+		FROM 
+			USUARIO U 
+			INNER JOIN DISTRITO D ON U.idDistrito = D.idDistrito
+			INNER JOIN ROL R ON U.idRol = R.idRol	
+		WHERE
+			estado=1 
+			
+			order by idUsuario desc
+	</select>
+	
+		<select id="SQL_listaCliente"  resultMap="usuarioMap">
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.apellidos as usuario_apellidos,
+				U.correo as usuario_correo,
+				U.cell as usuario_cell,
+				U.fechaNacimiento as usuario_fechaNacimiento,
+				U.direccion as usuario_direccion,
+				U.dni as usuario_dni,
+				U.sexo as usuario_sexo,
+				U.login as usuario_login,
+				U.password as usuario_password,
+				D.idDistrito as distrito_id,
+				D.descripcion as distrito_descripcion,
+				R.idRol as rol_id,
+				R.descripcion as rol_descripcion,
+				U.estado as usuario_estado
+		FROM 
+			USUARIO U 
+			INNER JOIN DISTRITO D ON U.idDistrito = D.idDistrito
+			INNER JOIN ROL R ON U.idRol = R.idRol	
+		WHERE
+			estado=1 
+			and
+			R.idRol=1
+			order by idUsuario desc
+	</select>
+	
+	<select id="SQL_buscaUsuario" 	resultMap="usuarioMap" parameterType="int">
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.apellidos as usuario_apellidos,
+				U.correo as usuario_correo,
+				U.cell as usuario_cell,
+				U.fechaNacimiento as usuario_fechaNacimiento,
+				U.direccion as usuario_direccion,
+				U.dni as usuario_dni,
+				U.sexo as usuario_sexo,
+				U.login as usuario_login,
+				U.password as usuario_password,
+				D.idDistrito as distrito_id,
+				R.idRol as rol_id,
+				U.estado as usuario_estado
+		FROM
+			USUARIO U 
+			INNER JOIN DISTRITO D ON U.idDistrito = D.idDistrito
+			INNER JOIN ROL R ON U.idRol = R.idRol
+		WHERE
+			idUsuario =  #{idUsuario}
+	</select>	
+	
+	<select id="SQL_buscaUsuarioXcorreo" 	resultMap="usuarioMap" parameterType="String">
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.apellidos as usuario_apellidos
+		FROM
+			USUARIO U 
+		WHERE
+			U.correo =  #{usuario_correo}
+	</select>
+	
+	<select id="SQL_buscaUsuarioXusuario" 	resultMap="usuarioMap" parameterType="String">
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.password as usuario_password
+		FROM
+			USUARIO U 
+		WHERE
+			U.login =  #{usuario_login}
+	</select>
+	
+	<select id="SQL_validarPassword" resultMap="usuarioMap" parameterType="String" >
+		SELECT 
+				U.idUsuario as usuario_idCliente,
+				U.nombres as usuario_nombres,
+				U.password as usuario_password
+		FROM
+			USUARIO U 
+		WHERE
+			U.login =  #{usuario_login}
+	</select>
+	
+	<select id="SQL_actualizaUsuario" resultType="usuarioBeanIbatis">
+			UPDATE 
+				USUARIO
+			SET  
+				nombres = #{nombres},
+				apellidos = #{apellidos},  
+				correo = #{correo},
+				cell = #{cell},
+				fechaNacimiento = #{fechaNacimiento},
+				direccion = #{direccion},
+				dni = #{dni},
+				sexo = #{sexo},
+				password = #{password},
+				idDistrito = #{idDistrito},
+				idRol = #{idRol}
+			WHERE 
+				idUsuario = #{idUsuario} 
+	</select>
+	
+	<select id="SQL_eliminaUsuario" resultType="usuarioBeanIbatis">
+			UPDATE 
+				USUARIO
+			SET  
+				estado = 2
+			WHERE 
+				idUsuario = #{idUsuario} 
+	</select>
+	
+	<select id="SQL_listaDistrito"  resultType="distritoBeanIbatis"	>
+		SELECT 
+				idDistrito as idDistrito,
+				descripcion as descripcion
+		FROM 
+			DISTRITO
+	</select>
+	
+	<select id="SQL_listaRol"  resultType="rolBeanIbatis"	>
+		SELECT 
+				idRol as idRol,
+				descripcion as descripcion
+		FROM 
+			ROL 
+		WHERE 
+			idRol > 0
+	</select>
+	
+<!-- PRODUCTO**************************************************** -->
+	<!-- RESULT MAP PRODUCTO**************************************************** -->	
+
+	<resultMap id="ProductoMap" type="productoBeanIbatis">
+         <id property="idProducto" column="producto_idProducto" />
+         <result property="nombre" column="producto_nombre" />
+         <result property="precio" column="producto_precio" />
+         <result property="estado" column="producto_estado" />
+         <result property="descripcion" column="producto_descripcion" />
+          <result property="fecha" column="producto_fecha" />
+         <result property="idUsuario" column="producto_usuario" />
+         <association property="tipo"  resultMap="TipoMap"/>
+         <association property="categoria"  resultMap="CategoriaMap"/>
+         <association property="subcategoria"  resultMap="SubCategoriaMap"/>
+     </resultMap>
+  	
+  	 <resultMap id="TipoMap" type="tipoProductoBeanIbatis">
+         <id property="idTipoProducto" column="tipo_idTipoProducto" />
+         <result property="descripcion" column="tipo_descripcion" />
+     </resultMap>
+    
+  	<resultMap id="CategoriaMap" type="categoriaProductoBeanIbatis">
+         <id property="idCategoriaProducto" column="categoria_idCategoriaProducto" />
+         <result property="descripcion" column="categoria_descripcion" />
+     </resultMap>
+     
+     <resultMap id="SubCategoriaMap" type="subcategoriaProductoBeanIbatis">
+         <id property="idSubCategoriaProducto" column="subcategoria_idSubCategoriaProducto" />
+         <result property="descripcion" column="subcategoria_descripcion" />
+     </resultMap>
+     
+    <!-- MANTENIMIENTO PRODUCTO**************************************************** -->	
+    
+     <select id="SQL_registraProducto"	parameterType="productoBeanIbatis" >
+		INSERT INTO PRODUCTO VALUES(null, 
+				#{nombre},
+				#{precio},
+				#{ImagenBytes},
+				#{ImagenFileName},
+				#{ImagenContentType},
+				#{estado},
+				#{descripcion},
+				#{fecha},
+				#{idTipoProducto},
+				#{idCategoriaProducto},
+				#{idSubCategoriaProducto},
+				#{idUsuario})
+		</select>	
+	<select id="SQL_listaProducto" resultMap="ProductoMap"  >
+		SELECT 
+				P.idProducto as producto_idProducto,
+				P.nombre as producto_nombre,
+				P.Precio as producto_precio,
+				P.estado as producto_estado,
+				P.descripcion as producto_descripcion,
+				P.fechaRegistro as producto_fecha,
+				T.descripcion as tipo_descripcion,
+				T.idTipoProducto as tipo_idTipoProducto,
+				C.descripcion as categoria_descripcion,
+				C.idCategoriaProducto as categoria_idCategoriaProducto,
+				S.idSubCategoriaProducto as subcategoria_idSubCategoriaProducto,
+				S.descripcion as subcategoria_descripcion,
+				P.idUsuario as producto_usuario
+		FROM 
+			PRODUCTO P 
+			INNER JOIN TIPOPRODUCTO T ON P.idTipoProducto=T.idTipoProducto
+			INNER JOIN CATEGORIAPRODUCTO C ON C.idCategoriaProducto = P.idCategoriaProducto
+			INNER JOIN SUBCATEGORIAPRODUCTO S ON S.idSubCategoriaProducto = P.idSubCategoriaProducto
+		WHERE
+			estado=1	
+			order by idProducto desc
+	</select>
+	
+	<select id="SQL_buscaProducto" 	resultType="productoBeanIbatis" parameterType="int">
+		SELECT 
+				idProducto as idProducto,
+				nombre as nombre,
+				precio as precio,
+				imagen_bytes as ImagenBytes,
+				imagen_nombre as ImagenFileName,
+				imagen_content_type as ImagenContentType,
+				estado as estado,
+				descripcion as descripcion,
+				idTipoProducto as idTipoProducto,
+				idCategoriaProducto as idCategoriaProducto,
+				idSubCategoriaProducto as idSubCategoriaProducto ,
+				idUsuario as idUsuario 
+		FROM
+			PRODUCTO
+		WHERE
+			idProducto =  #{idProducto}
+	</select>	
+	
+	<select id="SQL_buscaProductoXNombre" 	resultType="productoBeanIbatis" parameterType="String">
+		SELECT 
+				idProducto as idProducto,
+				nombre as nombre,
+				precio as precio,
+				imagen_bytes as ImagenBytes,
+				imagen_nombre as ImagenFileName,
+				imagen_content_type as ImagenContentType,
+				estado as estado,
+				descripcion as descripcion,
+				idTipoProducto as idTipoProducto,
+				idCategoriaProducto as idCategoriaProducto,
+				idSubCategoriaProducto as idSubCategoriaProducto ,
+				idUsuario as idUsuario 
+		FROM
+			PRODUCTO
+		WHERE
+			nombre =  #{nombre}
+	</select>
+	
+	<select id="SQL_actualizaProducto" resultType="productoBeanIbatis">
+			UPDATE 
+				PRODUCTO
+			SET  
+				nombre = #{nombre}, 
+				precio = #{precio},
+				descripcion = #{descripcion},
+				idTipoProducto = #{idTipoProducto},
+				idCategoriaProducto = #{idCategoriaProducto},
+				idSubCategoriaProducto = #{idSubCategoriaProducto},
+				idUsuario = #{idUsuario}
+			WHERE 
+				idProducto = #{idProducto} 
+	</select>
+	
+	<select id="SQL_eliminaProducto" resultType="productoBeanIbatis">
+			UPDATE 
+				PRODUCTO
+			SET  
+				estado = 2
+			WHERE 
+				idProducto = #{idProducto} 
+	</select>
+	
+	<select id="SQL_listaTipoProducto"  resultType="tipoProductoBeanIbatis"	>
+		SELECT 
+				idTipoProducto as idTipoProducto,
+				descripcion as descripcion
+		FROM 
+			TIPOPRODUCTO
+	</select>
+	
+	<select id="SQL_listaCategoriaProducto"  resultType="categoriaProductoBeanIbatis"	>
+		SELECT 
+				idCategoriaProducto as idCategoriaProducto,
+				descripcion as descripcion
+		FROM 
+			CATEGORIAPRODUCTO
+	</select>
+	
+	<select id="SQL_listaSubCategoriaProducto"  resultType="subcategoriaProductoBeanIbatis" parameterType="int"	>
+		SELECT 
+				idSubCategoriaProducto as idSubCategoriaProducto,
+				descripcion as descripcion
+		FROM 
+			SUBCATEGORIAPRODUCTO
+		WHERE
+			idCategoriaProducto = #{idCategoriaProducto} 
+	</select>
+	
+	<!-- TRANSACCION PEDIDO**************************************************** -->	
+	
+	<insert id="SQL_insertaPedidoCabecera"	parameterType="pedidoBeanIbatis"    
+					useGeneratedKeys="true" keyProperty="idPedido">
+		INSERT INTO PEDIDO
+			(idPedido,idCliente,fechaPedido,fechaEntrega,Total,destinatario,lugarentrega,idEstadoPedido)
+		VALUES
+			(null,#{idCliente},#{fechaPedido},#{fechaEntrega},#{total},#{destinatario},#{lugar},#{idEstadoPedido})	
+		
+	</insert>	
+</mapper>
+
+
+	

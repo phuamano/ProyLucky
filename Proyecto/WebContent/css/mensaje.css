@@ -1,0 +1,25 @@
+
+#validacionStruts{
+	float:left;
+	width:22%;
+}
+
+#validacionInputXL{
+	float:left;
+	width:41%;
+}
+/* mensaje */
+.validacion{
+	float:left;
+	width:60%;
+	font-family:cursive;
+	 /* display:none;   */
+}
+
+.validacionMensajeXL{
+	float:left;
+	width:50%;
+	font-family:cursive;
+	padding-left: 30px;
+	/* display:none; */
+}

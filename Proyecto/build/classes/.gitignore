@@ -1,0 +1,10 @@
+/ConfiguracionIbatis.xml
+/action/
+/bean/
+/dao/
+/log4j.properties
+/mapper.xml
+/service/
+/struts.properties
+/struts.xml
+/util/

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.configuration.xml.reload" value="true" />
+    <constant name="struts.custom.i18n.resources" value="global" />
+	<constant name="struts.action.excludePattern" value=".*/static/.*" />
+
+
+	
+	<package name="dawi" namespace="/" extends="struts-default,json-default,tiles-default">
+
+		<action name="a_home">	
+			<result type="tiles">t_home</result>
+		</action>
+		
+		<action name="a_catalogo">	
+			<result type="tiles">t_catalogo</result>
+		</action>
+		
+		<action name="a_home_intranet">	
+			<result type="tiles">t_home_intranet</result>
+		</action>
+		
+		<action name="a_clienteRegistro">	
+			<result type="tiles">t_clienteRegistro</result>
+		</action>
+		
+		<action name="a_catalogo_intranet">	
+			<result type="tiles">t_catalogo_intranet</result>
+		</action>
+		
+		<action name="a_mantenimiento_producto">
+			<result type="tiles">t_mantenimiento_producto</result>
+		</action> 
+		
+		<action name="a_mantenimiento_usuarios">
+			<result type="tiles">t_mantenimiento_usuario</result>
+		</action> 
+		<action name="a_carrito_compras">
+			<result type="tiles">t_carrito_compras</result>
+		</action> 
+		<action name="a_carrito_compras_intranet">
+			<result type="tiles">t_carrito_compras_intranet</result>
+		</action> 
+		<action name="a_login_registro">
+			<result type="tiles">t_login_registro</result>
+		</action> 
+		
+		<action name="a_orden_pedido">
+			<result type="tiles">t_orden_pedido</result>
+		</action> 
+		
+		<action name="a_actualizar_cliente">
+			<result type="tiles">t_actualizar_cliente</result>
+		</action>
+	</package>	
+</struts>
